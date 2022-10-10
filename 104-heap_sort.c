@@ -1,75 +1,79 @@
 #include "sort.h"
 
 /**
- * heapify - Heapify the root element again so that we have the
- * highest element at root.
- * @array: Array of integers
- * @index: Index of the array
- * @size: Size of the array
- * Return: Void - No return
+ * sift_down - fixes a heap
+ * @array: the heap to fix
+ * @root: the root of the heap
+ * @end: the last index of the heap
+ * @size: size of the array
+ *
+ * Return: void
  */
-void heapify(int *array, int index, size_t size)
+void sift_down(int *array, size_t root, size_t end, size_t size)
 {
-	int larg = index;
-	size_t child_l = 2 * index + 1;
-	size_t child_r = 2 * index + 2;
+	size_t left_child, right_child, swap;
+	int temp;
 
-	if (child_l < size && array[child_l] > array[larg])
+	while ((left_child = (2 * root) + 1) <= end)
 	{
-		larg = child_l;
+		swap = root;
+		right_child = left_child + 1;
+		if (array[swap] < array[left_child])
+			swap = left_child;
+		if (right_child <= end && array[swap] < array[right_child])
+			swap = right_child;
+		if (swap == root)
+			return;
+		temp = array[root];
+		array[root] = array[swap];
+		array[swap] = temp;
+		print_array(array, size);
+		root = swap;
 	}
-
-	if (child_r < size && array[child_r] > array[larg])
-	{
-		larg = child_r;
-	}
-
-	if (larg != index)
-	{
-		swap(&array[index], &array[larg]);
-		heapify(array, larg, size);
-	}
-}
-/**
- * swap - Swap values Function
- * @a: Value
- * @b: Value
- * Return: Void - No return
- */
-void swap(int *a, int *b)
-{
-	int temp = *a;
-	*a = *b;
-	*b = temp;
 }
 
 /**
- * heap_sort - Sorts an array of integers in ascending
- * order using the Heap sort algorithm
- * @array: Array of integers
- * @size: Size of the array
- * Return: Void - No return
+ * make_heap - makes a heap from an unsorted array
+ * @array: array to turn into a heap
+ * @size: size of the array
+ *
+ * Return: void
+ */
+void make_heap(int *array, size_t size)
+{
+	size_t parent;
+
+	for (parent = ((size - 1) - 1) / 2; 1; parent--)
+	{
+		sift_down(array, parent, size - 1, size);
+		if (parent == 0)
+			break;
+	}
+}
+
+/**
+ * heap_sort - sorts an array of ints in ascending order w/ the Heap sort algo
+ * @array: array to sort
+ * @size: size of the array
+ *
+ * Return: void
  */
 void heap_sort(int *array, size_t size)
 {
-	int i = 0;
+	size_t end;
+	int temp;
 
-	for (i = size / 2 - 1; i >= 0; i--)
+	if (array == NULL || size < 2)
+		return;
+	make_heap(array, size);
+	end = size - 1;
+	while (end > 0)
 	{
-		heapify(array, i, size);
+		temp = array[end];
+		array[end] = array[0];
+		array[0] = temp;
 		print_array(array, size);
-	}
-
-	for (i = size - 1; i >= 0; i--)
-	{
-		swap(&array[0], &array[i]);
-		print_array(array, size);
-		/* Put root elem to get highest elem at the root again */
-		heapify(array, 0, i);
-		print_array(array, size);
+		end--;
+		sift_down(array, 0, end, size);
 	}
 }
-
-
-
-
