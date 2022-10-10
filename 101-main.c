@@ -4,6 +4,7 @@
 
 /**
  * create_listint - Creates a doubly linked list from an array of integers
+ *
  * @array: Array to convert to a doubly linked list
  * @size: Size of the array
  *
@@ -32,26 +33,6 @@ listint_t *create_listint(const int *array, size_t size)
 	return (list);
 }
 
-
-/**
- * free_list - Frees the doubly linked list
- * @list: Pointer to the beginning of the list
- *
- * Return: void
- */
-void free_list(listint_t *list)
-{
-	listint_t *next;
-
-	while (list)
-	{
-		next = list->next;
-		free(list);
-		list = next;
-	}
-}
-
-
 /**
  * main - Entry point
  *
@@ -68,9 +49,8 @@ int main(void)
 		return (1);
 	print_list(list);
 	printf("\n");
-	insertion_sort_list(&list);
+	cocktail_sort_list(&list);
 	printf("\n");
 	print_list(list);
-	free_list(list);
 	return (0);
 }
